@@ -105,3 +105,81 @@
 [2025-01-19 10:11:50.013] [info] Successfully loaded data for 3 assets
 [2025-01-19 10:11:50.013] [info] Starting agent training...
 [2025-01-19 10:11:50.013] [error] Error in portfolio optimization: Invalid action provided
+[2025-01-22 10:55:34.751] [info] Log level set to: info
+[2025-01-22 10:55:34.751] [info] Logger initialized successfully
+[2025-01-22 10:55:36.260] [info] Successfully loaded data for 3 assets
+[2025-01-22 10:55:36.260] [info] State dimensions breakdown:
+[2025-01-22 10:55:36.260] [info] Number of assets: 3
+[2025-01-22 10:55:36.260] [info] Price dimensions: 3
+[2025-01-22 10:55:36.260] [info] Holdings dimensions: 3
+[2025-01-22 10:55:36.260] [info] Technical feature dimensions: 9
+[2025-01-22 10:55:36.260] [info] Cash dimension: 1
+[2025-01-22 10:55:36.260] [info] Total state dimensions: 16
+[2025-01-22 10:55:40.577] [info] Successfully loaded data for 3 assets
+[2025-01-22 10:55:40.577] [info] Starting agent training...
+[2025-01-22 10:55:40.578] [error] Error in portfolio optimization: Invalid action provided
+[2025-01-22 10:58:36.953] [info] Log level set to: info
+[2025-01-22 10:58:36.953] [info] Logger initialized successfully
+[2025-01-22 10:58:38.429] [info] Successfully loaded data for 3 assets
+[2025-01-22 10:58:38.429] [info] State dimensions breakdown:
+[2025-01-22 10:58:38.429] [info] Number of assets: 3
+[2025-01-22 10:58:38.429] [info] Price dimensions: 3
+[2025-01-22 10:58:38.429] [info] Holdings dimensions: 3
+[2025-01-22 10:58:38.429] [info] Technical feature dimensions: 9
+[2025-01-22 10:58:38.429] [info] Cash dimension: 1
+[2025-01-22 10:58:38.429] [info] Total state dimensions: 16
+[2025-01-22 10:58:43.187] [info] Successfully loaded data for 3 assets
+[2025-01-22 10:58:43.187] [info] Starting agent training...
+[2025-01-22 10:58:43.187] [error] Error in portfolio optimization: Invalid action provided
+[2025-01-22 11:04:49.829] [info] Log level set to: info
+[2025-01-22 11:04:49.829] [info] Logger initialized successfully
+[2025-01-22 11:04:51.321] [info] Successfully loaded data for 3 assets
+[2025-01-22 11:04:51.321] [info] State dimensions breakdown:
+[2025-01-22 11:04:51.321] [info] Number of assets: 3
+[2025-01-22 11:04:51.321] [info] Price dimensions: 3
+[2025-01-22 11:04:51.321] [info] Holdings dimensions: 3
+[2025-01-22 11:04:51.321] [info] Technical feature dimensions: 9
+[2025-01-22 11:04:51.321] [info] Cash dimension: 1
+[2025-01-22 11:04:51.321] [info] Total state dimensions: 16
+[2025-01-22 11:04:55.568] [info] Successfully loaded data for 3 assets
+[2025-01-22 11:04:55.568] [info] Starting agent training...
+[2025-01-22 11:04:55.568] [error] Error in portfolio optimization: Invalid action provided
+[2025-01-22 11:07:08.967] [info] Log level set to: info
+[2025-01-22 11:07:08.967] [info] Logger initialized successfully
+[2025-01-22 11:07:10.483] [info] Successfully loaded data for 3 assets
+[2025-01-22 11:07:10.483] [info] State dimensions breakdown:
+[2025-01-22 11:07:10.483] [info] Number of assets: 3
+[2025-01-22 11:07:10.483] [info] Price dimensions: 3
+[2025-01-22 11:07:10.483] [info] Holdings dimensions: 3
+[2025-01-22 11:07:10.483] [info] Technical feature dimensions: 9
+[2025-01-22 11:07:10.483] [info] Cash dimension: 1
+[2025-01-22 11:07:10.483] [info] Total state dimensions: 16
+[2025-01-22 11:07:14.827] [info] Successfully loaded data for 3 assets
+[2025-01-22 11:07:14.827] [info] Starting agent training...
+[2025-01-22 11:07:14.827] [error] Error in portfolio optimization: Invalid action provided
+[2025-01-22 11:10:38.301] [info] Log level set to: info
+[2025-01-22 11:10:38.301] [info] Logger initialized successfully
+[2025-01-22 11:10:39.803] [info] Successfully loaded data for 3 assets
+[2025-01-22 11:10:39.803] [info] State dimensions breakdown:
+[2025-01-22 11:10:39.803] [info] Number of assets: 3
+[2025-01-22 11:10:39.803] [info] Price dimensions: 3
+[2025-01-22 11:10:39.803] [info] Holdings dimensions: 3
+[2025-01-22 11:10:39.803] [info] Technical feature dimensions: 9
+[2025-01-22 11:10:39.803] [info] Cash dimension: 1
+[2025-01-22 11:10:39.803] [info] Total state dimensions: 16
+[2025-01-22 11:10:44.105] [info] Successfully loaded data for 3 assets
+[2025-01-22 11:10:44.105] [info] Starting agent training...
+[2025-01-22 11:10:44.105] [error] Error in portfolio optimization: Invalid action provided
+[2025-01-22 11:12:10.187] [info] Log level set to: info
+[2025-01-22 11:12:10.187] [info] Logger initialized successfully
+[2025-01-22 11:12:11.683] [info] Successfully loaded data for 3 assets
+[2025-01-22 11:12:11.683] [info] State dimensions breakdown:
+[2025-01-22 11:12:11.683] [info] Number of assets: 3
+[2025-01-22 11:12:11.683] [info] Price dimensions: 3
+[2025-01-22 11:12:11.683] [info] Holdings dimensions: 3
+[2025-01-22 11:12:11.683] [info] Technical feature dimensions: 9
+[2025-01-22 11:12:11.683] [info] Cash dimension: 1
+[2025-01-22 11:12:11.683] [info] Total state dimensions: 16
+[2025-01-22 11:12:15.933] [info] Successfully loaded data for 3 assets
+[2025-01-22 11:12:15.933] [info] Starting agent training...
+[2025-01-22 11:12:15.934] [error] Error in portfolio optimization: Invalid action provided

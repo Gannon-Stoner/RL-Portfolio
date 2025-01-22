@@ -47,22 +47,25 @@ PortfolioEnv::State PortfolioEnv::reset() {
     current_step_ = 0;
     portfolio_values_.clear();
 
-    // Reset state
-    current_state_.cash = current_state_.getPortfolioValue();  // Convert all to cash
-    current_state_.holdings = Eigen::VectorXd::Zero(getNumAssets());
+    // Reset state with initial equal weights
+    current_state_.cash = current_state_.getPortfolioValue() / 2;  // Keep half in cash initially
+
+    // Initialize with equal weights for the remaining half
+    double initial_position = current_state_.cash / (getNumAssets() * historical_prices_[0].sum());
+    current_state_.holdings = Eigen::VectorXd::Constant(getNumAssets(), initial_position);
     current_state_.prices = historical_prices_[0];
 
     // Initialize price and volume history
     current_state_.price_history.clear();
     current_state_.volume_history.clear();
 
-    // Fill initial history buffer with first LOOKBACK_WINDOW days of data
+    // Fill initial history buffer
     size_t initial_history = std::min(LOOKBACK_WINDOW, historical_prices_.size());
     for (size_t i = 0; i < initial_history; ++i) {
-        if (i < historical_prices_.size()) {  // Safety check
+        if (i < historical_prices_.size()) {
             current_state_.price_history.push_back(historical_prices_[i]);
         }
-        if (i < historical_volumes_.size()) {  // Safety check
+        if (i < historical_volumes_.size()) {
             current_state_.volume_history.push_back(historical_volumes_[i]);
         }
     }
@@ -76,7 +79,6 @@ PortfolioEnv::State PortfolioEnv::reset() {
     return current_state_;
 }
 
-// In PortfolioEnv.cpp
 std::tuple<PortfolioEnv::State, double, bool> PortfolioEnv::step(const Eigen::VectorXd& action) {
     if (!validateAction(action)) {
         throw std::runtime_error("Invalid action provided");
@@ -258,7 +260,6 @@ double PortfolioEnv::calculateMomentum(int asset_idx, int window) {
     return (current_price / past_price - 1.0);
 }
 
-// In PortfolioEnv.cpp
 double PortfolioEnv::calculateReward(double old_value, double new_value) const {
     // Calculate return
     double returns = new_value / old_value - 1.0;

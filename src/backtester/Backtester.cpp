@@ -55,32 +55,60 @@ Eigen::VectorXd Backtester::stateToVector(const PortfolioEnv::State& state) cons
     return state_vector;
 }
 
-// In Backtester.cpp
 Eigen::VectorXd Backtester::actionToVector(TradingAction action) const {
     Eigen::VectorXd action_vector = Eigen::VectorXd::Zero(env_->getNumAssets());
-    double position_size = env_->getMaxPositionSize();  // Get max position size from env
+    double position_size = env_->getMaxPositionSize();  // Should be 0.5 from config
+    size_t num_assets = env_->getNumAssets();  // Should be 3
+
+    // Log current portfolio state
+    Eigen::VectorXd current_weights = env_->getCurrentWeights();
+    spdlog::info("Current weights before action: [{}, {}, {}]",
+                 current_weights(0), current_weights(1), current_weights(2));
 
     switch (action) {
         case TradingAction::SELL:
-            // Exit positions (minimal weight)
-                action_vector.setConstant(0.01);
-        break;
+            // Keep very small positions (10% total portfolio split equally)
+            action_vector.setConstant(0.1 / num_assets);
+            spdlog::info("SELL action selected");
+            break;
 
         case TradingAction::HOLD:
-            // Keep current weights
-                action_vector = env_->getCurrentWeights();
-        break;
+            // If holding, use current weights but ensure they're balanced
+            if (current_weights.sum() < 0.1) {  // If mostly in cash
+                action_vector.setConstant(0.3 / num_assets);  // Put 30% to work
+            } else {
+                action_vector = current_weights;
+            }
+            spdlog::info("HOLD action selected");
+            break;
 
         case TradingAction::BUY:
-            // Aggressive position with max allowed size
-                action_vector.setConstant(position_size / env_->getNumAssets());
-        break;
+            // Take larger positions but respect position size limits
+            double weight_per_asset = std::min(position_size, 0.8 / num_assets);
+            action_vector.setConstant(weight_per_asset);
+            spdlog::info("BUY action selected");
+            break;
     }
 
-    // Ensure sum equals 1.0 (remaining goes to cash)
-    if (action_vector.sum() > 1.0) {
-        action_vector /= action_vector.sum();
+    // Ensure no single position exceeds position_size
+    for (int i = 0; i < num_assets; i++) {
+        if (action_vector(i) > position_size) {
+            action_vector(i) = position_size;
+        }
     }
+
+    // Calculate total allocation
+    double total_allocation = action_vector.sum();
+
+    // If we're allocating more than 100%, normalize
+    if (total_allocation > 1.0) {
+        action_vector *= (0.99 / total_allocation);  // Leave a small cash buffer
+    }
+
+    // Log final weights
+    spdlog::info("Final action weights: [{}, {}, {}], Total allocation: {}",
+                 action_vector(0), action_vector(1), action_vector(2),
+                 action_vector.sum());
 
     return action_vector;
 }

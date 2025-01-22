@@ -95,23 +95,27 @@ void RLAgent::validateState(const Eigen::VectorXd& state) const {
     }
 }
 
+// In RLAgent.cpp
 TradingAction RLAgent::selectAction(const Eigen::VectorXd& state) {
     try {
         validateState(state);
 
         std::uniform_real_distribution<> dis(0.0, 1.0);
         if (dis(rng_) < epsilon_) {
-            // Random action
-            std::uniform_int_distribution<> action_dis(0, 2);
-            return static_cast<TradingAction>(action_dis(rng_) - 1);
+            // Random action with different probabilities
+            double rand_val = dis(rng_);
+            if (rand_val < 0.4) return TradingAction::HOLD;
+            else if (rand_val < 0.7) return TradingAction::BUY;
+            else return TradingAction::SELL;
         }
 
         // Get action probabilities from policy network
         Eigen::VectorXd action_probs = policy_network_->forward(state);
 
-        // Ensure probabilities sum to 1
-        if (std::abs(action_probs.sum() - 1.0) > 1e-5) {
-            action_probs /= action_probs.sum();  // Normalize
+        // Add small random noise to break ties
+        std::normal_distribution<> noise(0, 0.01);
+        for (int i = 0; i < action_probs.size(); i++) {
+            action_probs(i) += noise(rng_);
         }
 
         // Select action with highest probability

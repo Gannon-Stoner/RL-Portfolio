@@ -170,54 +170,64 @@ private:
     }
 
     void trainAgent() {
-        logger_->info("Starting agent training...");
+    logger_->info("Starting agent training...");
+    std::vector<double> episode_returns;
 
-        for (size_t episode = 0; episode < EPISODES; ++episode) {
-            auto env_state = env_->reset();
-            // Convert environment state to vector for the agent
-            Eigen::VectorXd state = backtester_->stateToVector(env_state);
-            double episode_reward = 0.0;
-            bool done = false;
+    for (size_t episode = 0; episode < EPISODES; ++episode) {
+        auto env_state = env_->reset();
+        Eigen::VectorXd state = backtester_->stateToVector(env_state);
+        double episode_reward = 0.0;
+        size_t steps = 0;
+        bool done = false;
 
-            while (!done) {
-                // Select action using the vectorized state
-                auto action = agent_->selectAction(state);
+        // Track actions in this episode
+        std::map<TradingAction, int> action_counts;
 
-                // Execute action in environment
-                auto [next_env_state, reward, is_done] = env_->step(backtester_->actionToVector(action));
+        while (!done) {
+            // Select and log action
+            auto action = agent_->selectAction(state);
+            action_counts[action]++;
 
-                // Convert next state to vector for the agent
-                Eigen::VectorXd next_state = backtester_->stateToVector(next_env_state);
+            // Execute action
+            auto [next_env_state, reward, is_done] = env_->step(backtester_->actionToVector(action));
+            Eigen::VectorXd next_state = backtester_->stateToVector(next_env_state);
 
-                // Store experience using vectorized states
-                Experience exp(state, action, reward, next_state, is_done);
-                exp.portfolioValue = env_->getPortfolioValue();
-                replay_buffer_->addExperience(exp);
+            // Store experience
+            Experience exp(state, action, reward, next_state, is_done);
+            exp.portfolioValue = env_->getPortfolioValue();
+            replay_buffer_->addExperience(exp);
 
-                // Train agent if we have enough experiences
-                if (replay_buffer_->size() >= BATCH_SIZE) {
-                    agent_->train(BATCH_SIZE);
-                }
-
-                state = next_state;
-                episode_reward += reward;
-                done = is_done;
+            // Train agent
+            if (replay_buffer_->size() >= BATCH_SIZE) {
+                agent_->train(BATCH_SIZE);
             }
 
-            // Log episode results
-            std::string metrics = "Episode: " + std::to_string(episode) +
-                                ", Return: " + std::to_string(episode_reward) +
-                                ", Portfolio Value: " + std::to_string(env_->getPortfolioValue());
-            logger_->logTrainingMetrics(metrics);
+            state = next_state;
+            episode_reward += reward;
+            done = is_done;
+            steps++;
+        }
 
-            // Save model periodically
-            if (episode % 100 == 0) {
-                std::string model_path = "models/agent_" + std::to_string(episode) + ".model";
-                agent_->saveModel(model_path);
-                logger_->info("Saved model to: " + model_path);
-            }
+        episode_returns.push_back(episode_reward);
+
+        // Log detailed episode information
+        std::string actions_str = "BUY: " + std::to_string(action_counts[TradingAction::BUY]) +
+                                ", HOLD: " + std::to_string(action_counts[TradingAction::HOLD]) +
+                                ", SELL: " + std::to_string(action_counts[TradingAction::SELL]);
+
+        logger_->info_fmt("Episode {0} - Return: {1:.2f}, Steps: {2}, Actions: {3}, Epsilon: {4:.3f}, Portfolio: {5:.2f}",
+                 episode, episode_reward, steps, actions_str,
+                 agent_->getEpsilon(), env_->getPortfolioValue());
+
+        // Every 10 episodes, log the average return
+        if (episode % 10 == 0 && episode > 0) {
+            double avg_return = std::accumulate(episode_returns.end() - std::min(10ul, episode_returns.size()),
+                                             episode_returns.end(), 0.0) /
+                              std::min(10ul, episode_returns.size());
+            logger_->info_fmt("Average return over last 10 episodes: {0:.2f}", avg_return);
         }
     }
+}
 
     void evaluatePerformance() {
         logger_->info("Evaluating agent performance...");

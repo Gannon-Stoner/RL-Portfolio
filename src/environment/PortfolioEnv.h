@@ -90,6 +90,7 @@ public:
     double getPortfolioValue() const { return current_state_.getPortfolioValue(); }
     Eigen::VectorXd getCurrentWeights() const { return current_state_.getCurrentWeights(); }
     size_t getNumAssets() const { return historical_prices_[0].size(); }
+    double getMaxPositionSize() const { return max_position_size_; }
 
 private:
     // Internal methods
@@ -120,6 +121,23 @@ private:
     // Risk management parameters
     std::vector<double> portfolio_values_;  // Track historical portfolio values
     double risk_free_rate_ = 0.02;  // Annual risk-free rate for Sharpe ratio
+
+    void updateState() {
+        // Update current prices
+        current_state_.prices = historical_prices_[current_step_];
+
+        // Update price history
+        if (current_state_.price_history.size() >= LOOKBACK_WINDOW) {
+            current_state_.price_history.erase(current_state_.price_history.begin());
+            current_state_.volume_history.erase(current_state_.volume_history.begin());
+        }
+        current_state_.price_history.push_back(historical_prices_[current_step_]);
+        current_state_.volume_history.push_back(historical_volumes_[current_step_]);
+
+        // Update features
+        current_state_.features = calculateFeatures();
+    }
+
 
     // Helper function to convert Eigen vector to string
     static std::string vectorToString(const Eigen::VectorXd& vec) {
